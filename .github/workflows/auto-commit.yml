@@ -1,0 +1,29 @@
+name: Auto Commit Generator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  make-commits:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Ini untuk memberikan izin menulis berkas ke akun Anda
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Generate 100 Commits
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        for i in {1..100}
+        do
+          echo "Commit ke-$i pada $(date)" >> log.txt
+          git add log.txt
+          git commit -m "Auto commit ke-$i untuk quest"
+        done
+
+    - name: Push Changes Native
+      run: |
+        git push origin main
