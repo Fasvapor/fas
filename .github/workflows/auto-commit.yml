@@ -1,0 +1,30 @@
+name: Auto Commit Generator
+
+on:
+  workflow_dispatch: # Fitur ini membuat Anda bisa menekan tombol "Run" secara manual
+
+jobs:
+  make-commits:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Generate 100 Commits
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Angka 100 di bawah ini bisa Anda ganti sesuai jumlah commit yang diinginkan (misal: 50 atau 80)
+        for i in {1..100}
+        do
+          echo "Commit ke-$i pada $(date)" >> log.txt
+          git add log.txt
+          git commit -m "Auto commit ke-$i untuk quest"
+        done
+
+    - name: Push Changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
